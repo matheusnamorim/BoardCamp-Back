@@ -4,4 +4,10 @@ const categoriesSchema = Joi.object({
     name: Joi.string().trim().required()
 });
 
-export {categoriesSchema};
+const gamesSchema = Joi.object({
+    name: Joi.string().trim().required(),
+    stockTotal: Joi.number().greater(0).required(),
+    pricePerDay: Joi.number().greater(0).required(),
+});
+
+export {categoriesSchema, gamesSchema};

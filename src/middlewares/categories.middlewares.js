@@ -1,6 +1,7 @@
 import { categoriesSchema } from "../Schemas/schema.js";
 import { connection } from "../db/db.js";
 import {STATUS_CODE} from '../enums/statusCode.js';
+import {MESSAGES} from '../enums/messages.js';
 
 async function validateCategories (req, res, next){
 
@@ -17,7 +18,7 @@ async function validateCategories (req, res, next){
         `SELECT * FROM categories WHERE name = '${name}';
     `);
 
-    if(nameExists.rows.length !== 0) return res.status(STATUS_CODE.CONFLICT).send('Name already existing!');
+    if(nameExists.rows.length !== 0) return res.status(STATUS_CODE.CONFLICT).send(MESSAGES.CONFLICT);
 
     res.locals.name = name;
     next();
