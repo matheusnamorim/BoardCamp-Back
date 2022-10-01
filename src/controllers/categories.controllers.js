@@ -4,13 +4,22 @@ import {MESSAGES} from '../enums/messages.js';
 
 const registerCategories = (req, res) => {
     const {name} = res.locals;
-    connection.query('INSERT INTO categories (name) VALUES ($1);', [name]);
-	return res.status(STATUS_CODE.CREATED).send(MESSAGES.CREATED);
+    try {
+        connection.query('INSERT INTO categories (name) VALUES ($1);', [name]);
+        return res.status(STATUS_CODE.CREATED).send(MESSAGES.CREATED);
+    } catch (error) {
+        return res.status(STATUS_CODE.SERVER_ERROR).send(MESSAGES.SERVER_ERROR);
+    }
+
 };
 
 const listCategories = async (req, res) => {
-    const list = await connection.query('SELECT * FROM categories;');
-    return res.status(STATUS_CODE.OK).send(list.rows);
+    try {
+        const list = await connection.query('SELECT * FROM categories;');
+        return res.status(STATUS_CODE.OK).send(list.rows);
+    } catch (error) {
+        return res.status(STATUS_CODE.SERVER_ERROR).send(MESSAGES.SERVER_ERROR);
+    }
 };
 
 export { registerCategories, listCategories };
