@@ -24,7 +24,7 @@ const getClientById = async (req, res) => {
             `SELECT * FROM customers WHERE id = ($1);`
         , [id])).rows;
         
-        
+        if(client.length === 0) return res.status(STATUS_CODE.NOT_FOUND).send(MESSAGES.ID_NOT_FOUND);
 
         const date = new Date(client[0].birthday);
         delete client[0].birthday;
@@ -42,4 +42,28 @@ const getClientById = async (req, res) => {
     }
 };
 
-export { registerClient, getClientById };
+const listClient = async (req, res) => {
+    const newList = [];
+    try {
+        const list = (await connection.query(
+            `SELECT * FROM customers;`
+        )).rows;
+        
+        list.forEach(function(elemento){
+            const date = new Date(elemento.birthday);
+            newList.push({
+                id: elemento.id,
+                name: elemento.name,
+                phone: elemento.phone,
+                cpf: elemento.cpf,
+                birhday: date.toISOString().substring(0, 10)
+            })
+            delete elemento.birthday;
+        });
+        return res.status(STATUS_CODE.OK).send(newList);
+    } catch (error) {
+        return res.status(STATUS_CODE.SERVER_ERROR).send(MESSAGES.SERVER_ERROR);
+    }
+};
+
+export { registerClient, getClientById, listClient };
