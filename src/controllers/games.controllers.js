@@ -12,9 +12,18 @@ const registerGames  = (req, res) => {
 };
 
 const ListGames = async (req, res) => {
+    const {name} = req.query;
     const list = await connection.query(`
-    SELECT games.id, games.name, games.image,  games."stockTotal", games."categoryId", games."pricePerDay", categories.name AS "categoryName"   FROM games JOIN categories ON games."categoryId" = categories.id;`
+        SELECT games.* , categories.name AS "categoryName" 
+            FROM games JOIN categories ON games."categoryId" = categories.id;`
     );
+    if(name){
+        const list = await connection.query(`
+            SELECT games.* , categories.name AS "categoryName" 
+                FROM games JOIN categories ON games."categoryId" = categories.id WHERE games.name ILIKE '${name}%';
+        `);
+        return res.status(STATUS_CODE.OK).send(list.rows);
+    }
     return res.status(STATUS_CODE.OK).send(list.rows);
 };
 
