@@ -16,6 +16,7 @@ async function validateCustomers (req, res, next){
         
         const cpfExist = await connection.query(`SELECT * FROM customers WHERE cpf = ($1)`, [cpf]);
         if(cpfExist.rows.length !== 0) return res.status(STATUS_CODE.CONFLICT).send(MESSAGES.CPF_CONFLICT);
+        
         res.locals.client = req.body;
         next();
     } catch (error) {

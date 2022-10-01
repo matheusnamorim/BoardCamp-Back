@@ -66,4 +66,21 @@ const listClient = async (req, res) => {
     }
 };
 
-export { registerClient, getClientById, listClient };
+const updateClient = async (req, res) => {
+    const {id} = req.params;
+    const {name, cpf, phone, birthday} = res.locals.client;
+
+    const client = (await connection.query(
+        `SELECT * FROM customers WHERE id = ($1);`
+    , [id])).rows;
+        
+    if(client.length === 0) return res.status(STATUS_CODE.NOT_FOUND).send(MESSAGES.ID_NOT_FOUND);
+    
+    connection.query(
+        `UPDATE customers SET name = $1, cpf = $2, phone = $3, birthday = $4 
+        WHERE id = $5`, [name, cpf, phone, birthday, id]);
+    return res.sendStatus(STATUS_CODE.OK);
+
+};
+
+export { registerClient, getClientById, listClient, updateClient};
