@@ -10,4 +10,11 @@ const gamesSchema = Joi.object({
     pricePerDay: Joi.number().greater(0).required(),
 });
 
-export {categoriesSchema, gamesSchema};
+const costumersSchema = Joi.object({
+    cpf: Joi.string().length(11).required(),
+    phone: Joi.string().min(10).max(11).required(),
+    name: Joi.string().trim().required(),
+    birthday: Joi.date().less('now').required()
+});
+
+export {categoriesSchema, gamesSchema, costumersSchema};
