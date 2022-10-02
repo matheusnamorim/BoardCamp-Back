@@ -17,4 +17,8 @@ const costumersSchema = Joi.object({
     birthday: Joi.date().less('now').required()
 });
 
-export {categoriesSchema, gamesSchema, costumersSchema};
+const rentalsSchema = Joi.object({
+    daysRented: Joi.number().greater(0).required()
+});
+
+export {categoriesSchema, gamesSchema, costumersSchema, rentalsSchema};

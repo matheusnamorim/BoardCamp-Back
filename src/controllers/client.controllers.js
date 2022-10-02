@@ -70,17 +70,20 @@ const updateClient = async (req, res) => {
     const {id} = req.params;
     const {name, cpf, phone, birthday} = res.locals.client;
 
-    const client = (await connection.query(
-        `SELECT * FROM customers WHERE id = ($1);`
-    , [id])).rows;
+    try {
+        const client = (await connection.query(
+            `SELECT * FROM customers WHERE id = ($1);`
+        , [id])).rows;
+            
+        if(client.length === 0) return res.status(STATUS_CODE.NOT_FOUND).send(MESSAGES.ID_NOT_FOUND);
         
-    if(client.length === 0) return res.status(STATUS_CODE.NOT_FOUND).send(MESSAGES.ID_NOT_FOUND);
-    
-    connection.query(
-        `UPDATE customers SET name = $1, cpf = $2, phone = $3, birthday = $4 
-        WHERE id = $5`, [name, cpf, phone, birthday, id]);
-    return res.sendStatus(STATUS_CODE.OK);
-
+        connection.query(
+            `UPDATE customers SET name = $1, cpf = $2, phone = $3, birthday = $4 
+            WHERE id = $5`, [name, cpf, phone, birthday, id]);
+        return res.status(STATUS_CODE.OK).send(MESSAGES.UPDATE_SUCCESS);
+    } catch (error) {
+        return res.status(STATUS_CODE.SERVER_ERROR).send(MESSAGES.SERVER_ERROR);
+    }
 };
 
 export { registerClient, getClientById, listClient, updateClient};
