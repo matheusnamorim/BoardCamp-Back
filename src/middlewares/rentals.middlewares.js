@@ -30,4 +30,22 @@ async function validateRentals(req, res, next){
     }
 }
 
-export {validateRentals};
+async function validateFinalRentals(req, res, next){
+    const {id} = req.params;
+
+    try {
+        const idExist = (await connection.query(
+            `SELECT * FROM rentals WHERE id = $1;`
+        , [id])).rows;
+
+        if(idExist.length === 0) return res.status(STATUS_CODE.NOT_FOUND).send(MESSAGES.ID_NOT_FOUND);
+        if(idExist[0].returnDate !== null) return res.status(STATUS_CODE.BAD_REQUEST).send(MESSAGES.RENTALS_FINISH);
+        
+        res.locals.id = idExist;
+        next();
+    } catch (error) {
+        return res.status(STATUS_CODE.SERVER_ERROR).send(MESSAGES.SERVER_ERROR);
+    }
+}
+
+export {validateRentals, validateFinalRentals};

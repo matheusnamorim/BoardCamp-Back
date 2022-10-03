@@ -1,9 +1,11 @@
 import express from "express";
-import { registerRentals } from "../controllers/rentals.controllers.js";
-import { validateRentals } from "../middlewares/rentals.middlewares.js";
+import { finishRentals, listRentals, registerRentals } from "../controllers/rentals.controllers.js";
+import { validateFinalRentals, validateRentals } from "../middlewares/rentals.middlewares.js";
 
 const router = express.Router();
 
 router.post('/rentals', validateRentals, registerRentals);
+router.get('/rentals', listRentals);
+router.post('/rentals/:id/return', validateFinalRentals, finishRentals);
 
 export default router;

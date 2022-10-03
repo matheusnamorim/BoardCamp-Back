@@ -8,7 +8,8 @@ const MESSAGES = Object.freeze({
 	IS_NAN: 'Value is not a number!',
 	CPF_CONFLICT: 'CPF already existing!',
 	SERVER_ERROR: 'Server Error!',
-	UPDATE_SUCCESS: 'Update Success!'
+	UPDATE_SUCCESS: 'Update Success!',
+	RENTALS_FINISH: 'Rentals already finished!'
 });
 
 export { MESSAGES };
