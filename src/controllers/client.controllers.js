@@ -4,7 +4,6 @@ import { STATUS_CODE } from "../enums/statusCode.js";
 
 const registerClient = (req, res) => {
     const {name, cpf, phone, birthday} = res.locals.client;
-    
     try {
         connection.query(`
         INSERT INTO customers (name, phone, cpf, birthday) VALUES ($1, $2, $3, $4);

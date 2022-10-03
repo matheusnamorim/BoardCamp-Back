@@ -13,22 +13,30 @@ async function validateRentals(req, res, next){
             res.status(STATUS_CODE.BAD_REQUEST).send(message);
             return;
         }
-    
+        
         const clientExist = (await connection.query(
             `SELECT * FROM customers WHERE id = $1;`
         , [customerId])).rows;
+
         if(clientExist.length === 0) return res.status(STATUS_CODE.BAD_REQUEST).send(MESSAGES.CLIENT_NOT_FOUND);
+        
+       
         const gamesExist = (await connection.query(
             `SELECT * FROM games WHERE id = $1;`
             , [gameId])).rows;
 
         if(gamesExist.length === 0) return res.status(STATUS_CODE.BAD_REQUEST).send(MESSAGES.GAME_NOT_FOUND);
         
-
         const checkStock = (await connection.query(
-            `SELECT * FROM rentals JOIN games ON rentals."gameId" = games.id WHERE rentals."gameId" = $1;`, [gameId]
+            `SELECT * FROM rentals;`
         )).rows;
-        if(checkStock.length >= checkStock[0].stockTotal) return res.status(STATUS_CODE.BAD_REQUEST).send(MESSAGES.STOCK_LIMIT);
+        
+        const checkStockTotal = (await connection.query(
+            `SELECT games."stockTotal" FROM games WHERE id = $1;`, [gameId]
+        )).rows[0];
+        const listGameId = checkStock.filter(value => value.gameId === gameId);
+        
+        if(listGameId.length >= checkStockTotal.stockTotal) return res.status(STATUS_CODE.BAD_REQUEST).send(MESSAGES.STOCK_LIMIT);
 
         res.locals.games = gamesExist[0];
         next();
