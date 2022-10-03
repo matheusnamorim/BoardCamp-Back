@@ -9,7 +9,8 @@ const MESSAGES = Object.freeze({
 	CPF_CONFLICT: 'CPF already existing!',
 	SERVER_ERROR: 'Server Error!',
 	UPDATE_SUCCESS: 'Update Success!',
-	RENTALS_FINISH: 'Rentals already finished!'
+	RENTALS_FINISH: 'Rentals already finished!',
+	DELETE: 'Successfully deleted!'
 });
 
 export { MESSAGES };

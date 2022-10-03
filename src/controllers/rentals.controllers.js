@@ -93,4 +93,15 @@ const finishRentals = (req, res) => {
     }
 };
 
-export {registerRentals, listRentals, finishRentals};
+const deleteRentals = (req, res) => {
+    const {id} = req.params;
+    
+    try {
+        connection.query(`DELETE FROM rentals WHERE id = $1`, [id]);
+        return res.status(STATUS_CODE.OK).send(MESSAGES.DELETE);
+    } catch (error) {
+        return res.status(STATUS_CODE.SERVER_ERROR).send(MESSAGES.SERVER_ERROR);
+    }
+};
+
+export {registerRentals, listRentals, finishRentals, deleteRentals};
