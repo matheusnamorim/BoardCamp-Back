@@ -34,7 +34,9 @@ async function validateRentals(req, res, next){
         const checkStockTotal = (await connection.query(
             `SELECT games."stockTotal" FROM games WHERE id = $1;`, [gameId]
         )).rows[0];
-        const listGameId = checkStock.filter(value => value.gameId === gameId);
+        const listGameId = checkStock.filter(value => {
+            if(value.gameId === gameId && value.returnDate === null) return value;
+        });
         
         if(listGameId.length >= checkStockTotal.stockTotal) return res.status(STATUS_CODE.BAD_REQUEST).send(MESSAGES.STOCK_LIMIT);
 
