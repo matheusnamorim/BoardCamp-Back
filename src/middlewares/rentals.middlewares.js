@@ -21,8 +21,15 @@ async function validateRentals(req, res, next){
         const gamesExist = (await connection.query(
             `SELECT * FROM games WHERE id = $1;`
             , [gameId])).rows;
+
         if(gamesExist.length === 0) return res.status(STATUS_CODE.BAD_REQUEST).send(MESSAGES.GAME_NOT_FOUND);
         
+
+        const checkStock = (await connection.query(
+            `SELECT * FROM rentals JOIN games ON rentals."gameId" = games.id WHERE rentals."gameId" = $1;`, [gameId]
+        )).rows;
+        if(checkStock.length >= checkStock[0].stockTotal) return res.status(STATUS_CODE.BAD_REQUEST).send(MESSAGES.STOCK_LIMIT);
+
         res.locals.games = gamesExist[0];
         next();
     } catch (error) {

@@ -10,7 +10,8 @@ const MESSAGES = Object.freeze({
 	SERVER_ERROR: 'Server Error!',
 	UPDATE_SUCCESS: 'Update Success!',
 	RENTALS_FINISH: 'Rentals already finished!',
-	DELETE: 'Successfully deleted!'
+	DELETE: 'Successfully deleted!',
+	STOCK_LIMIT: 'Stock limit reached!'
 });
 
 export { MESSAGES };
